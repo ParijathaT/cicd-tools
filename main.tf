@@ -1,5 +1,5 @@
 module "jenkins" {
-source  = "terraform-aws-modules/ec2-instance/aws"
+  source  = "terraform-aws-modules/ec2-instance/aws"
 
   name = "jenkins"
 
@@ -28,8 +28,8 @@ module "jenkins_agent" {
   name = "jenkins-agent"
 
   instance_type          = "t3.small"
-  vpc_security_group_ids = ["sg-01bc7ebe005fb1cb2"] #replace your SG
-  subnet_id = "subnet-0ea509ad4cba242d7" #replace your Subnet
+  vpc_security_group_ids = ["sg-0999f53b3ecccadd3"] #replace your SG
+  subnet_id = "subnet-04528ff9160f26064" #replace your Subnet
   ami = data.aws_ami.ami_info.id
   user_data = file("jenkins-agent.sh")
   tags = {
@@ -45,31 +45,31 @@ module "jenkins_agent" {
   ]
 }
 
-# +module "records" {
-#   source  = "terraform-aws-modules/route53/aws//modules/records"
-#   version = "~> 2.0"
+module "records" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  version = "~> 2.0"
 
-#   zone_name = var.zone_name
+  zone_name = var.zone_name
 
-#   records = [
-#     {
-#       name    = "jenkins"
-#       type    = "A"
-#       ttl     = 1
-#       records = [
-#         module.jenkins.public_ip
-#       ]
-#       allow_overwrite = true
-#     },
-#     {
-#       name    = "jenkins-agent"
-#       type    = "A"
-#       ttl     = 1
-#       records = [
-#         module.jenkins_agent.private_ip
-#       ]
-#       allow_overwrite = true
-#     }
-#   ]
+  records = [
+    {
+      name    = "jenkins"
+      type    = "A"
+      ttl     = 1
+      records = [
+        module.jenkins.public_ip
+      ]
+      allow_overwrite = true
+    },
+    {
+      name    = "jenkins-agent"
+      type    = "A"
+      ttl     = 1
+      records = [
+        module.jenkins_agent.private_ip
+      ]
+      allow_overwrite = true
+    }
+  ]
 
-# }
+}
